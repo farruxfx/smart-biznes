@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Business Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation (Desktop) -->
+        <nav class="sidebar">
+            <div class="logo-area">
+                <span class="material-icons-round logo-icon">storefront</span>
+                <span class="logo-text">SmartBiz</span>
+            </div>
+            <ul class="nav-links">
+                <li class="nav-item active" data-view="dashboard">
+                    <span class="material-icons-round">dashboard</span>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-view="accounting">
+                    <span class="material-icons-round">account_balance_wallet</span>
+                    <span>Accounting</span>
+                </li>
+                <li class="nav-item" data-view="customers">
+                    <span class="material-icons-round">people</span>
+                    <span>Customers</span>
+                </li>
+                <li class="nav-item" data-view="debts">
+                    <span class="material-icons-round">money_off</span>
+                    <span>Debts</span>
+                </li>
+                <li class="nav-item" data-view="sms">
+                    <span class="material-icons-round">sms</span>
+                    <span>SMS Marketing</span>
+                </li>
+                <li class="nav-item" data-view="ai">
+                    <span class="material-icons-round">smart_toy</span>
+                    <span>AI Assistant</span>
+                </li>
+                <li class="nav-itemSpacer"></li>
+                <li class="nav-item" data-view="settings">
+                    <span class="material-icons-round">settings</span>
+                    <span>Settings</span>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="mobile-menu-toggle">
+                    <span class="material-icons-round">menu</span>
+                </div>
+                <div class="page-title">Dashboard</div>
+                <div class="top-actions">
+                    <div class="search-bar">
+                        <span class="material-icons-round">search</span>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <button class="icon-btn notification-btn">
+                        <span class="material-icons-round">notifications</span>
+                        <span class="notification-badge"></span>
+                    </button>
+                    <div class="profile-avatar">Owner</div>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="views-container">
+
+                <!-- DASHBOARD VIEW -->
+                <section id="view-dashboard" class="view active-view">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon income"><span class="material-icons-round">arrow_upward</span></div>
+                            <div class="metric-info">
+                                <span class="label">Today Income</span>
+                                <span class="value" id="dash-income">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon expense"><span class="material-icons-round">arrow_downward</span>
+                            </div>
+                            <div class="metric-info">
+                                <span class="label">Today Expense</span>
+                                <span class="value" id="dash-expense">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon balance"><span class="material-icons-round">account_balance</span>
+                            </div>
+                            <div class="metric-info">
+                                <span class="label">Balance</span>
+                                <span class="value" id="dash-balance">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon debt"><span class="material-icons-round">warning</span></div>
+                            <div class="metric-info">
+                                <span class="label">Overdue Debts</span>
+                                <span class="value" id="dash-overdue">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="panel quick-actions">
+                            <h3>Quick Actions</h3>
+                            <div class="action-buttons">
+                                <button class="action-btn"
+                                    onclick="app.openModal('modal-transaction', {type: 'income'})">
+                                    <span class="material-icons-round">add</span> Income
+                                </button>
+                                <button class="action-btn"
+                                    onclick="app.openModal('modal-transaction', {type: 'expense'})">
+                                    <span class="material-icons-round">remove</span> Expense
+                                </button>
+                                <button class="action-btn" onclick="app.openModal('modal-customer')">
+                                    <span class="material-icons-round">person_add</span> Customer
+                                </button>
+                                <button class="action-btn" onclick="app.openModal('modal-debt')">
+                                    <span class="material-icons-round">money_off</span> Debt
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="panel recent-activity">
+                            <h3>Recent Activity</h3>
+                            <ul class="activity-list" id="dash-activity-list">
+                                <!-- Activity Items Injected Here -->
+                                <li class="empty-state">No recent activity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ACCOUNTING VIEW -->
+                <section id="view-accounting" class="view">
+                    <div class="section-header">
+                        <h2>Transactions</h2>
+                        <button class="primary-btn" onclick="app.openModal('modal-transaction')">
+                            <span class="material-icons-round">add</span> New Transaction
+                        </button>
+                    </div>
+
+                    <div class="filters-bar">
+                        <select id="filter-type">
+                            <option value="all">All Types</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                        <input type="date" id="filter-date">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Customer</th>
+                                    <th>Note</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transaction-list">
+                                <!-- Transactions injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- CUSTOMERS VIEW -->
+                <section id="view-customers" class="view">
+                    <div class="section-header">
+                        <h2>Customers</h2>
+                        <button class="primary-btn" onclick="app.openModal('modal-customer')">
+                            <span class="material-icons-round">person_add</span> Add Customer
+                        </button>
+                    </div>
+                    <div class="search-bar-local">
+                        <input type="text" id="customer-search" placeholder="Search customers...">
+                    </div>
+                    <div class="customers-grid" id="customer-list">
+                        <!-- Customer Cards injected here -->
+                    </div>
+                </section>
+
+                <!-- DEBTS VIEW -->
+                <section id="view-debts" class="view">
+                    <div class="section-header">
+                        <h2>Debt Tracker</h2>
+                        <button class="primary-btn" onclick="app.openModal('modal-debt')">
+                            <span class="material-icons-round">add</span> Add Debt
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="debt-list">
+                                <!-- Debts injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- SMS MARKETING VIEW -->
+                <section id="view-sms" class="view">
+                    <div class="sms-container">
+                        <div class="panel sms-composer">
+                            <h3>Compose SMS</h3>
+                            <div class="form-group">
+                                <label>Recipients</label>
+                                <select id="sms-recipients">
+                                    <option value="all">All Customers</option>
+                                    <option value="vip">VIP Customers</option>
+                                    <option value="debtors">Debtors</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Message Template</label>
+                                <select id="sms-template" onchange="app.loadTemplate(this.value)">
+                                    <option value="">Select Template...</option>
+                                    <option value="promo">Monthly Promo</option>
+                                    <option value="reminder">Debt Reminder</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Message Content</label>
+                                <textarea id="sms-message" rows="5"
+                                    placeholder="Write your message here... use {name} for personalization."></textarea>
+                            </div>
+                            <button class="primary-btn full-width" onclick="app.sendSMS()">
+                                <span class="material-icons-round">send</span> Send Campaign
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI ASSISTANT VIEW -->
+                <section id="view-ai" class="view">
+                    <div class="chat-container">
+                        <div class="chat-history" id="chat-history">
+                            <div class="chat-msg ai">
+                                <div class="msg-content">Hello! I'm your AI business assistant. Ask me about your
+                                    profits, top customers, or marketing ideas.</div>
+                            </div>
+                        </div>
+                        <div class="chat-suggestions">
+                            <button class="chip" onclick="app.askAI('How is my profit this month?')">Profit
+                                Analysis</button>
+                            <button class="chip" onclick="app.askAI('Who are my top customers?')">Top Customers</button>
+                            <button class="chip" onclick="app.askAI('Draft a discount SMS')">Draft SMS</button>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="ai-input" placeholder="Ask anything..."
+                                onkeypress="app.handleChatInput(event)">
+                            <button class="icon-btn send-btn" onclick="app.sendChat()">
+                                <span class="material-icons-round">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SETTINGS VIEW -->
+                <section id="view-settings" class="view">
+                    <div class="settings-panel panel">
+                        <h3>Business Settings</h3>
+                        <div class="form-group">
+                            <label>Business Name</label>
+                            <input type="text" id="setting-business-name" value="My Business">
+                        </div>
+                        <div class="form-group">
+                            <label>Currency</label>
+                            <select id="setting-currency">
+                                <option value="UZS">UZS (So'm)</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button class="secondary-btn" onclick="app.saveSettings()">Save Settings</button>
+                        </div>
+                        <hr>
+                        <h3>Data Management</h3>
+                        <div class="data-actions">
+                            <button class="secondary-btn" onclick="app.exportData()">
+                                <span class="material-icons-round">download</span> Export Data
+                            </button>
+                            <button class="secondary-btn warning" onclick="app.resetData()">
+                                <span class="material-icons-round">delete_forever</span> Reset All Data
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+
+        <!-- Bottom Navigation (Mobile) -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-view="dashboard">
+                <span class="material-icons-round">dashboard</span>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" data-view="accounting">
+                <span class="material-icons-round">account_balance_wallet</span>
+                <span>Books</span>
+            </div>
+            <div class="nav-item fab-wrapper" onclick="app.openModal('modal-transaction')">
+                <div class="fab-btn">
+                    <span class="material-icons-round">add</span>
+                </div>
+            </div>
+            <div class="nav-item" data-view="customers">
+                <span class="material-icons-round">people</span>
+                <span>CRM</span>
+            </div>
+            <div class="nav-item" data-view="ai">
+                <span class="material-icons-round">smart_toy</span>
+                <span>AI</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Transaction Modal -->
+    <div id="modal-transaction" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title-transaction">Add Transaction</h3>
+                <button class="close-btn" onclick="app.closeModal('modal-transaction')"><span
+                        class="material-icons-round">close</span></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-transaction" onsubmit="event.preventDefault(); app.saveTransaction();">
+                    <input type="hidden" id="trans-id">
+                    <div class="form-group segments">
+                        <label class="segment-label">
+                            <input type="radio" name="trans-type" value="income" checked>
+                            <span class="segment-btn">Income</span>
+                        </label>
+                        <label class="segment-label">
+                            <input type="radio" name="trans-type" value="expense">
+                            <span class="segment-btn">Expense</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="trans-amount" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="trans-category" list="category-list" placeholder="e.g. Sales, Rent">
+                        <datalist id="category-list">
+                            <option value="Sales">
+                            <option value="Service">
+                            <option value="Rent">
+                            <option value="Salary">
+                            <option value="Supplies">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="trans-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Customer (Optional)</label>
+                        <select id="trans-customer">
+                            <option value="">Select Customer...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Note</label>
+                        <input type="text" id="trans-note" placeholder="Description...">
+                    </div>
+                    <button type="submit" class="primary-btn full-width">Save Transaction</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Modal -->
+    <div id="modal-customer" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Customer</h3>
+                <button class="close-btn" onclick="app.closeModal('modal-customer')"><span
+                        class="material-icons-round">close</span></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-customer" onsubmit="event.preventDefault(); app.saveCustomer();">
+                    <input type="hidden" id="cust-id">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="cust-name" required placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="cust-phone" required placeholder="+998...">
+                    </div>
+                    <div class="form-group">
+                        <label>Tag</label>
+                        <select id="cust-tag">
+                            <option value="Regular">Regular</option>
+                            <option value="VIP">VIP</option>
+                            <option value="Lead">Lead</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="primary-btn full-width">Save Customer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debt Modal -->
+    <div id="modal-debt" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Debt</h3>
+                <button class="close-btn" onclick="app.closeModal('modal-debt')"><span
+                        class="material-icons-round">close</span></button>
+            </div>
+            <div class="modal-body">
+                <form id="form-debt" onsubmit="event.preventDefault(); app.saveDebt();">
+                    <input type="hidden" id="debt-id">
+                    <div class="form-group">
+                        <label>Customer</label>
+                        <select id="debt-customer" required>
+                            <option value="">Select Customer...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="debt-amount" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="debt-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Note</label>
+                        <input type="text" id="debt-note" placeholder="Details...">
+                    </div>
+                    <button type="submit" class="primary-btn full-width">Save Debt</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
